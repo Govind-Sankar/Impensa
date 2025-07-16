@@ -5,7 +5,7 @@ Impensa is an Expense Tracker app built for Android using Kotlin and Jetpack Com
   <img src="images/app_icon.png" width="120" alt="Impensa Icon">
 </p>
 
-![GitHub release](https://img.shields.io/github/v/release/Govind-Sankar/Impensa)
+![GitHub release](https://img.shields.io/github/v/release/Govind-Sankar/Impensa?cacheSeconds=3600)
 ![License](https://img.shields.io/github/license/Govind-Sankar/Impensa)
 
 

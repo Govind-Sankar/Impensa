@@ -1,0 +1,77 @@
+# Built application files
+*.apk
+!app/release/app-release.apk
+*.ap_
+*.aab
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+out/
+
+# Gradle files
+.gradle/
+build/
+!gradle-wrapper.jar
+
+# Local configuration file (SDK path, etc)
+local.properties
+
+# Signing files
+*.jks
+*.keystore
+
+# Android Studio specific
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Specific IntelliJ files to ignore
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/misc.xml
+
+# MacOS
+.DS_Store
+
+# Capture output
+captures/
+
+# NDK/External build folders
+.externalNativeBuild/
+.cxx/
+
+# Kotlin specific (sometimes relevant)
+*.kotlin_module
+
+# Jetpack Compose build artifacts (handled via /build usually)
+composeCompiler/
+
+# Log files
+*.log
+
+# Gradle Wrapper
+.gradle/
+gradle-app.setting
+
+# VSCode files (if you use VSCode for some dev)
+.vscode/
+
+# Cache for Android Studio profiling tools
+.idea/.android
+
+# Other
+*.swp
+*.swo
+

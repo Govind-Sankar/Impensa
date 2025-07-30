@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.QueryStats
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -19,6 +20,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,12 +34,17 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.nebulae.impensa.core.data.local.ExpenseDatabase
 import com.nebulae.impensa.core.data.repository.ExpenseRepository
+import com.nebulae.impensa.core.util.PreferencesManager
 import com.nebulae.impensa.presentation.stat.StatScreen
 import com.nebulae.impensa.presentation.home.HomeScreen
 import com.nebulae.impensa.presentation.home.HomeViewModel
 import com.nebulae.impensa.presentation.home.HomeViewModelFactory
+import com.nebulae.impensa.presentation.navigation.Routes.CategorySettings
 import com.nebulae.impensa.presentation.navigation.Routes.Home
+import com.nebulae.impensa.presentation.navigation.Routes.Settings
 import com.nebulae.impensa.presentation.navigation.Routes.Stats
+import com.nebulae.impensa.presentation.settings.CategorySettingsScreen
+import com.nebulae.impensa.presentation.settings.SettingsScreen
 import com.nebulae.impensa.ui.theme.ImpensaExpenseTrackerAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -46,12 +53,16 @@ class MainActivity : ComponentActivity() {
 
         val database = ExpenseDatabase.getDatabase(this)
         val repository = ExpenseRepository(database.expenseDao())
-        val viewModelFactory = HomeViewModelFactory(repository)
+        val preferencesManager = PreferencesManager(applicationContext)
+        val viewModelFactory = HomeViewModelFactory(repository, preferencesManager)
         val viewModel = ViewModelProvider(this, viewModelFactory)[HomeViewModel::class.java]
 
         enableEdgeToEdge()
         setContent {
-            ImpensaExpenseTrackerAppTheme {
+            val isDarkTheme by viewModel.isDarkTheme.collectAsState()
+            ImpensaExpenseTrackerAppTheme (
+                darkTheme = isDarkTheme
+            ) {
                 MainScreen(viewModel)
             }
         }
@@ -80,6 +91,12 @@ fun MainScreen(
                 composable(route = Stats) {
                     StatScreen(navController, viewModel)
                 }
+                composable(route = Settings) {
+                    SettingsScreen(navController, viewModel)
+                }
+                composable(route = CategorySettings) {
+                    CategorySettingsScreen(navController, viewModel)
+                }
             }
         },
         bottomBar = {
@@ -88,6 +105,29 @@ fun MainScreen(
                 modifier = Modifier
                     .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp))
             ) {
+                NavigationBarItem(
+                    selected = currentRoute == Stats,
+                    onClick = {
+                        navController.navigate(route = Stats) {
+                            popUpTo(0)
+                        }
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.QueryStats,
+                            contentDescription = "Stats",
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
+                    },
+                    label = { Text(text = "Stats") },
+                    colors = NavigationBarItemDefaults.colors(
+                        indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                        selectedIconColor = Color.White,
+                        selectedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unselectedIconColor = MaterialTheme.colorScheme.onBackground,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurface
+                    )
+                )
                 NavigationBarItem(
                     selected = currentRoute == Home,
                     onClick = {
@@ -112,20 +152,20 @@ fun MainScreen(
                     )
                 )
                 NavigationBarItem(
-                    selected = currentRoute == Stats,
+                    selected = currentRoute == Settings,
                     onClick = {
-                        navController.navigate(route = Stats) {
+                        navController.navigate(route = Settings) {
                             popUpTo(0)
                         }
                     },
                     icon = {
                         Icon(
-                            imageVector = Icons.Default.QueryStats,
-                            contentDescription = "Stats",
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "Settings",
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     },
-                    label = { Text(text = "Stats") },
+                    label = { Text(text = "Settings") },
                     colors = NavigationBarItemDefaults.colors(
                         indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
                         selectedIconColor = Color.White,

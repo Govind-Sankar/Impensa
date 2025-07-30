@@ -51,9 +51,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.nebulae.impensa.core.model.Expense
-import com.nebulae.impensa.core.util.CATEGORIES
-import com.nebulae.impensa.presentation.home.components.EmptyScreen
-import com.nebulae.impensa.presentation.home.components.ExpenseItem
+import com.nebulae.impensa.presentation.components.EmptyScreen
+import com.nebulae.impensa.presentation.components.ExpenseItem
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -68,7 +67,7 @@ fun HomeScreen(
     val newAmount by viewModel.amount.collectAsState()
     var addExpanded by remember { mutableStateOf(false) }
     val selectedCategory by viewModel.selectedCategory.collectAsState()
-    val categories = CATEGORIES
+    val categories = viewModel.customCategories.collectAsState().value.keys.toList()
     val recentExpenses by viewModel.recentExpenses.collectAsState()
     var showDialog by rememberSaveable { mutableStateOf(false) }
     val sortedExpenses = recentExpenses

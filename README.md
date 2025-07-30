@@ -15,24 +15,26 @@ Impensa is an Expense Tracker app built for Android using Kotlin and Jetpack Com
 <img src="images/badge_github.png" style="height: 100px;">
 </a> 
 
-# 📱 Features
+## Features
 
 - Add, Delete or Edit expenses
 - View monthly expenses as a pie chart
+- Toggle Dark Theme
+- Custom expense categories
 - Modern colorful UI using Jetpack Compose
 
-## 🖼️ Screenshots
+## Screenshots
 
-<img src="images/HomepageDark.png" width="200"/> <img src="images/EditpageDark.png" width="200"/> <img src="images/StatspageDark.png" width="200"/> <img src="images/HomepageLight.png" width="200"/> <img src="images/EditpageLight.png" width="200"/> <img src="images/StatspageLight.png" width="200"/> 
+<img src="images/HomepageDark.png" width="200"/> <img src="images/StatspageDark.png" width="200"/> <img src="images/EditExpensepageDark.png" width="200"/> <img src="images/SettingspageDark.png" width="200"/> <img src="images/HomepageLight.png" width="200"/> <img src="images/StatspageLight.png" width="200"/> <img src="images/EditCategoriespageDark.png" width="200"/>
 
-## 📦 How to Install
+## How to Install
 
 1. Download the latest APK from the [Releases](https://github.com/Govind-Sankar/Impensa/releases) section.
 2. Transfer the APK to your Android device.
 3. Enable installation from unknown sources.
 4. Open the APK and install it.
 
-## 🚀 Getting Started (for developers)
+## Getting Started (for developers)
 
 Clone this repo:
    ```bash
@@ -49,6 +51,6 @@ This project uses the following open-source libraries:
 - [AndroidX DataStore](https://developer.android.com/topic/libraries/architecture/datastore) (Apache 2.0)
 - [FontAwesome Extended Icons](https://developer.android.com/reference/kotlin/androidx/compose/material/package-summary#MaterialIcons.Extended) (Apache 2.0)
 
-## 📄 License
+## License
 
 This project is licensed under the [Apache License v2.0](LICENSE).

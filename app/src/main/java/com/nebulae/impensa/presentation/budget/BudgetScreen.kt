@@ -23,6 +23,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -34,7 +35,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.nebulae.impensa.core.util.CATEGORIES
 import com.nebulae.impensa.presentation.home.HomeViewModel
 
 @Composable
@@ -45,7 +45,7 @@ fun BudgetScreen(
     var newAmount by rememberSaveable { mutableStateOf("") }
     var addExpanded by rememberSaveable { mutableStateOf(false) }
     var selectedCategory by rememberSaveable { mutableStateOf("Select Category") }
-    var categories = CATEGORIES
+    var categories = viewModel.customCategories.collectAsState().value.keys.toList()
 
     Column (
         modifier = Modifier

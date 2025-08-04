@@ -12,7 +12,7 @@ Impensa is an Expense Tracker app built for Android using Kotlin and Jetpack Com
 ### Download on:
 
 <a href = https://github.com/Govind-Sankar/Impensa/releases>
-<img src="images/badge_github.png" style="height: 100px;">
+<img src="images/badge_github.png" style="height: 100px;" alt="Github Releases Download Badge">
 </a> 
 
 ## Features
@@ -25,7 +25,7 @@ Impensa is an Expense Tracker app built for Android using Kotlin and Jetpack Com
 
 ## Screenshots
 
-<img src="images/HomepageDark.png" width="200"/> <img src="images/StatspageDark.png" width="200"/> <img src="images/EditExpensepageDark.png" width="200"/> <img src="images/SettingspageDark.png" width="200"/> <img src="images/HomepageLight.png" width="200"/> <img src="images/StatspageLight.png" width="200"/> <img src="images/EditCategoriespageDark.png" width="200"/>
+<img src="images/HomepageDark.png" width="200" alt="Home Page Dark"/> <img src="images/StatspageDark.png" width="200" alt="Stats Page Dark"/> <img src="images/EditExpensepageDark.png" width="200" alt="Edit Expense Page Dark"/> <img src="images/SettingspageDark.png" width="200" alt="Settings Page Dark"/> <img src="images/HomepageLight.png" width="200" alt="Home Page Light"/> <img src="images/StatspageLight.png" width="200" alt="Stats Page Light"/> <img src="images/EditCategoriespageDark.png" width="200" alt="Edit Categories Page Dark"/>
 
 ## How to Install
 

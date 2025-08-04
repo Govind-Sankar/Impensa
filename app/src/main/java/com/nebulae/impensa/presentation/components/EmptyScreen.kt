@@ -31,6 +31,6 @@ fun EmptyScreen(){
             contentDescription = "Dropdown",
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
         )
-        Text("You have no expenses!!!", color = MaterialTheme.colorScheme.onSurface)
+        Text("You have no expenses here!", color = MaterialTheme.colorScheme.onSurface)
     }
 }

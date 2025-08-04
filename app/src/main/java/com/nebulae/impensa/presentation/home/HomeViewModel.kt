@@ -47,6 +47,9 @@ open class HomeViewModel(
     private val _region = MutableStateFlow("IN")
     val region: MutableStateFlow<String> = _region
 
+    private val _statsScreenState = MutableStateFlow(value = 0)
+    val stateScreenState: MutableStateFlow<Int> = _statsScreenState
+
 //    private val _selectedPeriod = MutableStateFlow(LocalDate.now().month.toString() + " " + LocalDate.now().year.toString())
 //    val selectedPeriod: StateFlow<String> = _selectedPeriod
 
@@ -64,6 +67,12 @@ open class HomeViewModel(
         viewModelScope.launch {
             preferencesManager.darkThemeFlow.collect { isDark ->
                 _isDarkTheme.value = isDark
+            }
+        }
+
+        viewModelScope.launch {
+            preferencesManager.savedStatsScreenStateFlow.collect { statsScreenState ->
+                _statsScreenState.value = statsScreenState
             }
         }
 
@@ -107,6 +116,13 @@ open class HomeViewModel(
         _isDarkTheme.value = dark
         viewModelScope.launch {
             preferencesManager.setDarkTheme(dark)
+        }
+    }
+
+    fun setStatsScreenState(state: Int) {
+        _statsScreenState.value = state
+        viewModelScope.launch {
+            preferencesManager.setStatsScreenState(state)
         }
     }
 

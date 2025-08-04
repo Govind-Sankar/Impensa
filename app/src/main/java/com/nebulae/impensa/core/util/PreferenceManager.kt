@@ -19,6 +19,7 @@ class PreferencesManager(private val context: Context) {
     companion object {
         val DARK_THEME = booleanPreferencesKey("dark_theme")
         val CATEGORY_MAP = stringPreferencesKey("category_map")
+        val STATS_SCREEN_STATE = stringPreferencesKey("stats_screen_state")
     }
 
     suspend fun setDarkTheme(enabled: Boolean) {
@@ -61,15 +62,15 @@ class PreferencesManager(private val context: Context) {
             map
         }
 
-//    val customCategoryFlow: Flow<Map<String, Color>> = context.dataStore.data
-//        .map { prefs ->
-//            val map = mutableMapOf<String, Color>()
-//            prefs[CATEGORY_MAP]?.let { jsonString ->
-//                val json = JSONObject(jsonString)
-//                for (key in json.keys()) {
-//                    map[key] = Color(json.getInt(key))
-//                }
-//            }
-//            map
-//        }
+    suspend fun setStatsScreenState(state: Int) {
+        context.dataStore.edit { prefs ->
+            prefs[STATS_SCREEN_STATE] = state.toString()
+        }
+    }
+
+    val savedStatsScreenStateFlow: Flow<Int> = context.dataStore.data
+        .map {
+            it[STATS_SCREEN_STATE]?.toIntOrNull() ?: 0
+        }
+
 }

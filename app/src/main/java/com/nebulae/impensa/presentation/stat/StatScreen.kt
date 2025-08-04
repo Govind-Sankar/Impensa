@@ -15,10 +15,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,9 +41,10 @@ fun StatScreen (
         1 to "This year", //+ LocalDate.now().year.toString(),
         2 to "All time",
     )
-    var selectedValue by rememberSaveable { mutableStateOf(0) }
-    val totalAmount = viewModel.getTotalExpense(selectedValue)
-    val (pieChartSlices, totalMap) = viewModel.getPieRatio(selectedValue)
+    //var selectedValue by rememberSaveable { mutableStateOf(2) }
+    var selectedValue = viewModel.stateScreenState.collectAsState()
+    val totalAmount = viewModel.getTotalExpense(selectedValue.value)
+    val (pieChartSlices, totalMap) = viewModel.getPieRatio(selectedValue.value)
     val (colorMap, amountMap) = totalMap
     var expanded by remember{ mutableStateOf(false) }
 
@@ -67,6 +68,21 @@ fun StatScreen (
                 fontWeight = FontWeight.Light,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
+            PeriodMenu(
+                expanded = expanded,
+                period = periodList[selectedValue.value]?:"Unknown",
+                list = periodList,
+                onClick = {
+                    if (it == -1) {
+                        expanded = !expanded
+                    } else {
+                        viewModel.setStatsScreenState(it)
+                        expanded = false
+                    }
+                },
+                onDismiss = { expanded = false }
+            )
+            Spacer(modifier = Modifier.height(15.dp))
             if(amountMap.isEmpty()) {
                 Column (
                     modifier = Modifier
@@ -76,30 +92,15 @@ fun StatScreen (
                 ) { EmptyScreen() }
             }
             else {
-                PeriodMenu(
-                    expanded = expanded,
-                    period = periodList[selectedValue]?:"Unknown",
-                    list = periodList,
-                    onClick = {
-                        if (it == -1) {
-                            expanded = !expanded
-                        } else {
-                            selectedValue = it
-                            expanded = false
-                        }
-                    },
-                    onDismiss = { expanded = false }
-                )
-                Spacer(modifier = Modifier.height(15.dp))
                 ExpenseCard(
-                    period = periodList[selectedValue]?:"Unknown",
+                    period = periodList[selectedValue.value]?:"Unknown",
                     totalAmount = totalAmount
                 )
                 PieChartColumn(
                     pieChartSlices = pieChartSlices,
                     colorMap = colorMap,
                     amountMap = amountMap,
-                    period = periodList[selectedValue]?:"Unknown"
+                    period = periodList[selectedValue.value]?:"Unknown"
                 )
             }
         }

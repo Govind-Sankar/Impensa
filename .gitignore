@@ -62,7 +62,6 @@ composeCompiler/
 *.log
 
 # Gradle Wrapper
-.gradle/
 gradle-app.setting
 
 # VSCode files (if you use VSCode for some dev)

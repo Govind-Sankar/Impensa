@@ -30,7 +30,7 @@ fun ExpenseItem(
     viewModel: HomeViewModel,
     onClick: () -> Unit
 ){
-    val context = LocalContext.current
+    LocalContext.current
     Row (
         modifier = Modifier
             .fillMaxWidth()

@@ -1,7 +1,15 @@
 package com.nebulae.impensa.presentation.home
 
+import android.app.DownloadManager
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
+import android.os.Environment
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,13 +19,19 @@ import com.nebulae.impensa.core.model.Expense
 import com.nebulae.impensa.core.util.COLORMAP
 import com.nebulae.impensa.core.util.PreferencesManager
 import com.nebulae.impensa.core.util.extraColors
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
 import java.time.LocalDate
-import kotlin.math.exp
+import androidx.core.net.toUri
 
 open class HomeViewModel(
     val repository: ExpenseRepository,
@@ -50,8 +64,8 @@ open class HomeViewModel(
     private val _statsScreenState = MutableStateFlow(value = 0)
     val stateScreenState: MutableStateFlow<Int> = _statsScreenState
 
-//    private val _selectedPeriod = MutableStateFlow(LocalDate.now().month.toString() + " " + LocalDate.now().year.toString())
-//    val selectedPeriod: StateFlow<String> = _selectedPeriod
+    private val _checkerState = MutableStateFlow(value = 0)
+    val checkerState: MutableStateFlow<Int> = _checkerState
 
     init {
         viewModelScope.launch {
@@ -81,6 +95,110 @@ open class HomeViewModel(
                 _customCategories.value = categoryMap
             }
         }
+    }
+
+    private val _latestVersion = MutableStateFlow<String?>(null)
+    val latestVersion = _latestVersion.asStateFlow()
+    private val client = OkHttpClient()
+
+    fun checkForUpdates(context: Context) {
+        _checkerState.value = 0
+        val packageInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.packageManager.getPackageInfo(
+                context.packageName,
+                PackageManager.PackageInfoFlags.of(0)
+            )
+        } else {
+            @Suppress("DEPRECATION")
+            context.packageManager.getPackageInfo(
+                context.packageName,
+                0
+            )
+        }
+
+        val currentVersion = packageInfo.versionName ?: "Unknown"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val request = Request.Builder()
+                    .url("https://raw.githubusercontent.com/Govind-Sankar/Impensa/main/version/version.json")
+                    .build()
+
+                client.newCall(request).execute().use { response ->
+                    if (response.isSuccessful) {
+                        val bodyString = response.body()?.string()
+                        val json = JSONObject(bodyString ?: "{}")
+                        val latestVersionStr = json.optString("version", "Unknown")
+                        _latestVersion.value = latestVersionStr
+                        delay(3000)
+                        if (isNewerVersion(latestVersionStr, currentVersion)) {
+                            _checkerState.value = 2 // Update available
+                        } else {
+                            _checkerState.value = 1 // Up-to-date
+                        }
+                    } else {
+                        _latestVersion.value = "Error: ${response.code()}"
+                        _checkerState.value = -1
+                    }
+                }
+            } catch (e: Exception) {
+                _latestVersion.value = "Error: ${e.message}"
+                _checkerState.value = -1
+            }
+        }
+    }
+
+    private fun isNewerVersion(latest: String, current: String): Boolean {
+        val latestParts = latest.split(".")
+        val currentParts = current.split(".")
+        val maxLength = maxOf(latestParts.size, currentParts.size)
+
+        for (i in 0 until maxLength) {
+            val latestPart = latestParts.getOrNull(i)?.toIntOrNull() ?: 0
+            val currentPart = currentParts.getOrNull(i)?.toIntOrNull() ?: 0
+            if (latestPart > currentPart) return true
+            if (latestPart < currentPart) return false
+        }
+        return false
+    }
+
+    fun downloadAndInstallApk(context: Context) {
+        val apkUrl = "https://github.com/Govind-Sankar/Impensa/releases/latest/download/Impensa.apk"
+        val request = DownloadManager.Request(apkUrl.toUri())
+            .setTitle("Downloading update")
+            .setDescription("Please wait…")
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            .setAllowedOverMetered(true)
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "impensa-latest.apk")
+
+        val dm = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        val downloadId = dm.enqueue(request)
+
+        val onComplete = object : BroadcastReceiver() {
+            override fun onReceive(ctxt: Context?, intent: Intent?) {
+                val query = DownloadManager.Query().setFilterById(downloadId)
+                dm.query(query).use { cursor ->
+                    if (cursor.moveToFirst()) {
+                        val uriString = cursor.getString(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_LOCAL_URI))
+                        installApk(context, uriString.toUri())
+                    }
+                }
+                context.unregisterReceiver(this)
+            }
+        }
+
+        context.registerReceiver(
+            onComplete,
+            IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
+            Context.RECEIVER_NOT_EXPORTED
+        )
+    }
+
+    private fun installApk(context: Context, apkUri: Uri) {
+        val installIntent = Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(apkUri, "application/vnd.android.package-archive")
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        context.startActivity(installIntent)
     }
 
     fun addCategory(name: String) {

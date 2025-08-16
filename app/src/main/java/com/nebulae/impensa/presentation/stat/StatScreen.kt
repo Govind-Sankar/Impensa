@@ -42,7 +42,7 @@ fun StatScreen (
         2 to "All time",
     )
     //var selectedValue by rememberSaveable { mutableStateOf(2) }
-    var selectedValue = viewModel.stateScreenState.collectAsState()
+    val selectedValue = viewModel.stateScreenState.collectAsState()
     val totalAmount = viewModel.getTotalExpense(selectedValue.value)
     val (pieChartSlices, totalMap) = viewModel.getPieRatio(selectedValue.value)
     val (colorMap, amountMap) = totalMap

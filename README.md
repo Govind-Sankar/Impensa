@@ -22,6 +22,7 @@ Impensa is an Expense Tracker app built for Android using Kotlin and Jetpack Com
 - Toggle Dark Theme
 - Custom expense categories
 - Modern colorful UI using Jetpack Compose
+- In-App Updates
 
 ## Screenshots
 

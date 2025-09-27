@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DividerDefaults
@@ -69,6 +72,7 @@ fun HomeScreen(
     val selectedCategory by viewModel.selectedCategory.collectAsState()
     val categories = viewModel.customCategories.collectAsState().value.keys.toList()
     val recentExpenses by viewModel.recentExpenses.collectAsState()
+    val remarks by viewModel.remarks.collectAsState()
     var showDialog by rememberSaveable { mutableStateOf(false) }
     val sortedExpenses = recentExpenses
         .sortedWith(
@@ -86,115 +90,148 @@ fun HomeScreen(
         verticalArrangement = Arrangement.Top,
     ) {
         Text(
-            text = "Add Expense",
+            text = "Impensa",
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Light,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         Spacer(modifier = Modifier.height(10.dp))
-        Column {
-            OutlinedTextField(
-                value = newAmount,
-                onValueChange = {
-                    val regex = Regex("^\\d*(\\.\\d{0,2})?$")
-                    if (regex.matches(it)) {
-                        viewModel.updateAmount(it)
-                    } else {
-                        Toast.makeText(context, "Please enter a valid amount!", Toast.LENGTH_SHORT).show()
-                    }
-                },
-                label = { Text(text = "Amount", color = MaterialTheme.colorScheme.onSurface) },
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-                    focusedBorderColor = Color.DarkGray,
-                    unfocusedBorderColor = Color.Transparent,
-                    focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary,
-                    cursorColor = MaterialTheme.colorScheme.onSurface
-                )
+        Card(
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
             )
-            Spacer(modifier = Modifier.height(15.dp))
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(shape = RoundedCornerShape(5.dp))
-                    .background(MaterialTheme.colorScheme.onPrimary)
-                    .clickable { addExpanded = true }
-            ) {
-                Row(
+        ) {
+            Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = 15.dp), ) {
+                OutlinedTextField(
+                    value = newAmount,
+                    onValueChange = {
+                        val regex = Regex("^\\d*(\\.\\d{0,2})?$")
+                        if (regex.matches(it)) {
+                            viewModel.updateAmount(it)
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "Please enter a valid amount!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    },
+                    label = { Text(text = "Amount", color = MaterialTheme.colorScheme.onSurface) },
+                    singleLine = true,
                     modifier = Modifier
-                        .padding(16.dp)
+                        .fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        focusedBorderColor = Color.DarkGray,
+                        unfocusedBorderColor = Color.Transparent,
+                        focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                        cursorColor = MaterialTheme.colorScheme.onSurface
+                    )
+                )
+                Spacer(modifier = Modifier.height(15.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(shape = RoundedCornerShape(5.dp))
+                        .background(MaterialTheme.colorScheme.onPrimary)
+                        .clickable { addExpanded = true }
                 ) {
-                    Text(text = selectedCategory, color = MaterialTheme.colorScheme.onSurface)
-                    Spacer(modifier = Modifier.weight(1f))
-                    Icon(
-                        imageVector = Icons.Default.ArrowDropDown,
-                        contentDescription = "Dropdown",
-                        tint = MaterialTheme.colorScheme.onSurface
+                    Row(
+                        modifier = Modifier
+                            .padding(16.dp)
+                    ) {
+                        Text(text = selectedCategory, color = MaterialTheme.colorScheme.onSurface)
+                        Spacer(modifier = Modifier.weight(1f))
+                        Icon(
+                            imageVector = Icons.Default.ArrowDropDown,
+                            contentDescription = "Dropdown",
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = addExpanded,
+                        onDismissRequest = { addExpanded = false },
+                        modifier = Modifier
+                            .height(200.dp)
+                            .clip(shape = RoundedCornerShape(20.dp))
+                            .fillMaxWidth(0.85f),
+                        containerColor = MaterialTheme.colorScheme.onPrimary,
+                        content = {
+                            categories.forEach {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = it,
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
+                                    },
+                                    onClick = {
+                                        viewModel.updateSelectedCategory(it)
+                                        addExpanded = false
+                                    }
+                                )
+                            }
+                        }
                     )
                 }
-                DropdownMenu(
-                    expanded = addExpanded,
-                    onDismissRequest = { addExpanded = false },
+                Spacer(modifier = Modifier.height(10.dp))
+                OutlinedTextField(
+                    value = remarks?:"",
+                    onValueChange = {
+                         viewModel.updateRemarks(it)
+                    },
+                    label = { Text(text = "Remarks", color = MaterialTheme.colorScheme.onSurface) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        focusedBorderColor = Color.DarkGray,
+                        unfocusedBorderColor = Color.Transparent,
+                        focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                        cursorColor = MaterialTheme.colorScheme.onSurface
+                    )
+                )
+                Spacer(modifier = Modifier.height(15.dp))
+                Box(
                     modifier = Modifier
-                        .height(200.dp)
-                        .clip(shape = RoundedCornerShape(20.dp))
-                        .fillMaxWidth(0.85f),
-                    containerColor = MaterialTheme.colorScheme.onPrimary,
-                    content = {
-                        categories.forEach {
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        text = it,
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                },
-                                onClick = {
-                                    viewModel.updateSelectedCategory(it)
-                                    addExpanded = false
+                        .fillMaxWidth()
+                        .height(50.dp)
+                        .clip(shape = RoundedCornerShape(5.dp))
+                        .background(MaterialTheme.colorScheme.primary)
+                        .clickable {
+                            if (selectedCategory != "Select Category") {
+                                viewModel.addExpense(
+                                    amount = newAmount.toDouble(),
+                                    category = selectedCategory,
+                                    date = LocalDate.now().toString(),
+                                    remarks = remarks
+                                )
+                                navController.navigate("Home") {
+                                    popUpTo(0)
                                 }
-                            )
-                        }
-                    }
-                )
-            }
-            Spacer(modifier = Modifier.height(15.dp))
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
-                    .clip(shape = RoundedCornerShape(5.dp))
-                    .background(MaterialTheme.colorScheme.primary)
-                    .clickable {
-                        if(selectedCategory != "Select Category") {
-                            viewModel.addExpense(
-                                amount = newAmount.toDouble(),
-                                category = selectedCategory,
-                                date = LocalDate.now().toString()
-                            )
-                            navController.navigate("Home") {
-                                popUpTo(0)
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Please select a category!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
-                        } else {
-                            Toast.makeText(context, "Please select a category!", Toast.LENGTH_SHORT).show()
                         }
-                    }
-            ) {
-                Text(
-                    text = "Add Expense",
-                    color = Color.White,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.ExtraBold,
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                )
+                ) {
+                    Text(
+                        text = "Add Expense",
+                        color = Color.White,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.ExtraBold,
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                    )
+                }
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -264,6 +301,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
                     .fillMaxHeight(0.6f)
+                    .defaultMinSize(minHeight = 500.dp)
                     .clip(shape = RoundedCornerShape(30.dp))
                     .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.95f)),
             ) {

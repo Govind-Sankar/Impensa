@@ -40,7 +40,7 @@ fun PeriodMenu(
             modifier = Modifier
                 .clip(RoundedCornerShape(20.dp))
                 .background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.4f))
-                .clickable { onClick(-1) } // Dummy value to toggle expansion
+                .clickable { onClick(-1) }
                 .padding(horizontal = 10.dp, vertical = 5.dp)
         ) {
             Row(

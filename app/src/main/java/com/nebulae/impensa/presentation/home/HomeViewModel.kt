@@ -9,8 +9,8 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.util.Log
 import androidx.compose.ui.graphics.Color
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.tehras.charts.piechart.PieChartData
@@ -31,7 +31,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
 import java.time.LocalDate
-import androidx.core.net.toUri
 
 open class HomeViewModel(
     val repository: ExpenseRepository,
@@ -40,6 +39,9 @@ open class HomeViewModel(
 
     private val _amount = MutableStateFlow("")
     val amount: StateFlow<String> = _amount
+
+    private val _remarks: MutableStateFlow<String?> = MutableStateFlow("")
+    val remarks: StateFlow<String?> = _remarks
 
     private val _customCategories = MutableStateFlow(COLORMAP)
     val customCategories: StateFlow<Map<String, Color>> = _customCategories
@@ -117,6 +119,7 @@ open class HomeViewModel(
         }
 
         val currentVersion = packageInfo.versionName ?: "Unknown"
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val request = Request.Builder()
@@ -252,17 +255,21 @@ open class HomeViewModel(
         _selectedCategory.value = newCategory
     }
 
+    fun updateRemarks(newRemarks: String?) {
+        _remarks.value = newRemarks
+    }
+
 //    fun updateSelectedPeriod(newPeriod: String) {
 //        _selectedPeriod.value = newPeriod
 //    }
 
-    fun addExpense(amount: Double, category: String, date: String) {
-        val expense = Expense(amount = amount, category = category, date = date)
+    fun addExpense(amount: Double, category: String, date: String, remarks: String?) {
+        val expense = Expense(amount = amount, category = category, date = date, remarks = remarks)
         viewModelScope.launch {
             repository.insert(expense)
-            Log.d("ExpenseDebug", "Expense added: $expense")
             _amount.value = ""
             _selectedCategory.value = "Select Category"
+            _remarks.value = null
         }
     }
 

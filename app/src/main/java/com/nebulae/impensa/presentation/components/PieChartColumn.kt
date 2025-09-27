@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.github.tehras.charts.piechart.PieChart
 import com.github.tehras.charts.piechart.PieChartData
 import com.github.tehras.charts.piechart.animation.simpleChartAnimation
@@ -62,7 +63,7 @@ fun PieChartColumn(
         Spacer(modifier = Modifier.height(20.dp))
         Column(
             modifier = Modifier
-                .fillMaxWidth(0.8f)
+                .fillMaxWidth(0.95f)
                 .align(Alignment.CenterHorizontally),
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
@@ -70,23 +71,25 @@ fun PieChartColumn(
                 .forEach { (category, amount) ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                        horizontalArrangement = Arrangement.Absolute.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Box(
                             modifier = Modifier
                                 .background(colorMap[category] ?: Color.Gray)
-                                .size(10.dp)
+                                .size(8.dp)
                         ) {}
                         Text(
                             text = category,
                             color = colorMap[category] ?: Color.Gray,
-                            fontWeight = FontWeight.SemiBold
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 16.sp
                         )
                         Text(
                             text = formatNumber(amount),
                             color = colorMap[category] ?: Color.Gray,
-                            fontWeight = FontWeight.SemiBold
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 16.sp
                         )
                     }
                 }

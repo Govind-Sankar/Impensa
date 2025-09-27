@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -40,7 +41,8 @@ fun AdditionSettingsItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp)
+            .height(120.dp)
+            .defaultMinSize(100.dp)
             .padding(vertical = 5.dp)
             .clip(RoundedCornerShape(10.dp))
             .background(MaterialTheme.colorScheme.background)
@@ -51,6 +53,7 @@ fun AdditionSettingsItem(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(2.dp)
                 .align(Alignment.CenterHorizontally)
         ) {
             OutlinedTextField(
@@ -77,6 +80,7 @@ fun AdditionSettingsItem(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
+                    .defaultMinSize(minHeight = 80.dp)
                     .align(Alignment.Center)
             )
         }

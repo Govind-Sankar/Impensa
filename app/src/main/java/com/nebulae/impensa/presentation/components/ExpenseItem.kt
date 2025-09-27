@@ -45,7 +45,10 @@ fun ExpenseItem(
             )
             Text(text = expense.category, color = MaterialTheme.colorScheme.onSurface)
         }
-        Text(text = findDate(expense.date), color = MaterialTheme.colorScheme.onSurface)
+        Column{
+            Text(text = findDate(expense.date), color = MaterialTheme.colorScheme.onSurface)
+            Text(text = expense.remarks ?: "", color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.75f))
+        }
         Column (
             modifier = Modifier
                 .padding(start =15.dp)

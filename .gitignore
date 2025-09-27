@@ -74,3 +74,4 @@ gradle-app.setting
 *.swp
 *.swo
 
+/.kotlin/sessions/kotlin-compiler-6174184026547678203.salive

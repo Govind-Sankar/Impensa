@@ -9,4 +9,5 @@ data class Expense (
     val amount: Double = 0.0,
     val category: String = "",
     val date: String = "",
+    val remarks: String? = null
 )

@@ -39,10 +39,10 @@ import com.nebulae.impensa.presentation.stat.StatScreen
 import com.nebulae.impensa.presentation.home.HomeScreen
 import com.nebulae.impensa.presentation.home.HomeViewModel
 import com.nebulae.impensa.presentation.home.HomeViewModelFactory
-import com.nebulae.impensa.presentation.navigation.Routes.CategorySettings
-import com.nebulae.impensa.presentation.navigation.Routes.Home
-import com.nebulae.impensa.presentation.navigation.Routes.Settings
-import com.nebulae.impensa.presentation.navigation.Routes.Stats
+import com.nebulae.impensa.presentation.navigation.Routes.CATEGORYSETTINGS
+import com.nebulae.impensa.presentation.navigation.Routes.HOME
+import com.nebulae.impensa.presentation.navigation.Routes.SETTINGS
+import com.nebulae.impensa.presentation.navigation.Routes.STATS
 import com.nebulae.impensa.presentation.settings.CategorySettingsScreen
 import com.nebulae.impensa.presentation.settings.SettingsScreen
 import com.nebulae.impensa.ui.theme.ImpensaExpenseTrackerAppTheme
@@ -83,18 +83,18 @@ fun MainScreen(
         content = {
             NavHost(
                 navController = navController,
-                startDestination = Home,
+                startDestination = HOME,
             ) {
-                composable(route = Home) {
+                composable(route = HOME) {
                     HomeScreen(navController, viewModel)
                 }
-                composable(route = Stats) {
+                composable(route = STATS) {
                     StatScreen(navController, viewModel)
                 }
-                composable(route = Settings) {
+                composable(route = SETTINGS) {
                     SettingsScreen(navController, viewModel)
                 }
-                composable(route = CategorySettings) {
+                composable(route = CATEGORYSETTINGS) {
                     CategorySettingsScreen(navController, viewModel)
                 }
             }
@@ -106,9 +106,9 @@ fun MainScreen(
                     .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp))
             ) {
                 NavigationBarItem(
-                    selected = currentRoute == Stats,
+                    selected = currentRoute == STATS,
                     onClick = {
-                        navController.navigate(route = Stats) {
+                        navController.navigate(route = STATS) {
                             popUpTo(0)
                         }
                     },
@@ -129,9 +129,9 @@ fun MainScreen(
                     )
                 )
                 NavigationBarItem(
-                    selected = currentRoute == Home,
+                    selected = currentRoute == HOME,
                     onClick = {
-                        navController.navigate(route = Home) {
+                        navController.navigate(route = HOME) {
                             popUpTo(0)
                         }
                     },
@@ -152,9 +152,9 @@ fun MainScreen(
                     )
                 )
                 NavigationBarItem(
-                    selected = currentRoute == Settings,
+                    selected = currentRoute == SETTINGS,
                     onClick = {
-                        navController.navigate(route = Settings) {
+                        navController.navigate(route = SETTINGS) {
                             popUpTo(0)
                         }
                     },

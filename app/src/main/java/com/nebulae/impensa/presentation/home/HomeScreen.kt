@@ -102,7 +102,7 @@ fun HomeScreen(
                 containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
             )
         ) {
-            Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = 15.dp), ) {
+            Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = 15.dp)) {
                 OutlinedTextField(
                     value = newAmount,
                     onValueChange = {
@@ -277,6 +277,7 @@ fun HomeScreen(
             var editCategory by rememberSaveable { mutableStateOf("Select Category") }
             var showDateDialog by remember { mutableStateOf(false) }
             var selectedDateText by remember { mutableStateOf(editingExpense!!.date) }
+            var editRemarks by rememberSaveable { mutableStateOf(editingExpense!!.remarks) }
 
             val initialMillis = remember(editingExpense) {
                 val localDate = LocalDate.parse(editingExpense!!.date)
@@ -291,6 +292,7 @@ fun HomeScreen(
                 if (editingExpense != null) {
                     editAmount = editingExpense!!.amount.toString()
                     editCategory = editingExpense!!.category
+                    editRemarks = editingExpense!!.remarks
                 }
             }
             BasicAlertDialog(
@@ -440,6 +442,25 @@ fun HomeScreen(
                         }
                     }
                     Spacer(modifier = Modifier.height(15.dp))
+                    OutlinedTextField(
+                        value = editRemarks?:"",
+                        onValueChange = {
+                            editRemarks = it
+                        },
+                        label = { Text(text = "Remarks", color = MaterialTheme.colorScheme.onSurface) },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            focusedBorderColor = Color.DarkGray,
+                            unfocusedBorderColor = Color.Transparent,
+                            focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                            cursorColor = MaterialTheme.colorScheme.onSurface
+                        )
+                    )
+                    Spacer(Modifier.height(15.dp))
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -452,7 +473,8 @@ fun HomeScreen(
                                         expense = editingExpense!!,
                                         newAmount = editAmount.toDoubleOrNull() ?: 0.0,
                                         newCategory = editCategory,
-                                        newDate = selectedDateText
+                                        newDate = selectedDateText,
+                                        newRemarks = editRemarks
                                     )
                                 }
                                 showDialog = false

@@ -303,17 +303,19 @@ open class HomeViewModel(
         _selectedCategory.value = expense?.category ?: "Select Category"
     }
 
-    fun updateExpense(expense: Expense, newAmount: Double, newCategory: String, newDate: String) {
+    fun updateExpense(expense: Expense, newAmount: Double, newCategory: String, newDate: String, newRemarks: String?) {
         val updatedExpense = expense.copy(
             amount = newAmount,
             category = newCategory,
-            date = newDate
+            date = newDate,
+            remarks = newRemarks
         )
         viewModelScope.launch {
             repository.update(updatedExpense)
             _editingExpense.value = null
             _amount.value = ""
             _selectedCategory.value = "Select Category"
+            _remarks.value = null
         }
     }
 

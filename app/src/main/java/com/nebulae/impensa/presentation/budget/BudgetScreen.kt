@@ -45,7 +45,7 @@ fun BudgetScreen(
     var newAmount by rememberSaveable { mutableStateOf("") }
     var addExpanded by rememberSaveable { mutableStateOf(false) }
     var selectedCategory by rememberSaveable { mutableStateOf("Select Category") }
-    var categories = viewModel.customCategories.collectAsState().value.keys.toList()
+    val categories = viewModel.customCategories.collectAsState().value.keys.toList()
 
     Column (
         modifier = Modifier

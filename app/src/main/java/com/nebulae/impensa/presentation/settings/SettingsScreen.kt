@@ -1,7 +1,6 @@
 package com.nebulae.impensa.presentation.settings
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,14 +27,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import com.nebulae.impensa.R
 import com.nebulae.impensa.presentation.components.ButtonSettingsItem
 import com.nebulae.impensa.presentation.components.ToggleSettingsItem
 import com.nebulae.impensa.presentation.components.VersionCard
 import com.nebulae.impensa.presentation.home.HomeViewModel
-import com.nebulae.impensa.presentation.navigation.Routes.CategorySettings
-import androidx.core.net.toUri
+import com.nebulae.impensa.presentation.navigation.Routes.CATEGORYSETTINGS
 
 @Composable
 fun SettingsScreen(
@@ -81,7 +80,7 @@ fun SettingsScreen(
             ButtonSettingsItem(
                 title = "Edit Categories",
                 onClick = {
-                    navController.navigate(CategorySettings)
+                    navController.navigate(CATEGORYSETTINGS)
                 }
             )
         }
